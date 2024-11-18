@@ -1,14 +1,18 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+"use client";
 
-export async function Profile() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+import { useTasks } from "@/lib/context/taskContext";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
+export function Profile() {
+  const { user } = useKindeBrowserClient();
+  const { tasks, activeTasks, completedTasks, openProfileModal } = useTasks();
 
   return (
     <div className="mt-6">
       <div
         className="px-2 py-4 flex items-center gap-3 bg-[#E6E6E6]/20 rounded-[0.8rem]
         hover:bg-[#E6E6E6]/50 transition duration-300 ease-in-out cursor-pointer border-2 border-transparent hover:border-2 hover:border-white"
+        onClick={openProfileModal}
       >
         <section>
           <img
@@ -21,7 +25,7 @@ export async function Profile() {
           <h1 className="flex flex-col text-xl">
             <span className="font-medium">Hello,</span>
             <span className="font-bold">
-              {user.given_name} {user.family_name}
+              {user?.given_name} {user?.family_name}
             </span>
           </h1>
         </section>
@@ -33,28 +37,36 @@ export async function Profile() {
             <p>Total Tasks:</p>
             <p className="pl-4 relative flex gap-2">
               <span className="absolute h-[70%] w-[0.2rem] left-[1px] top-1/2 translate-y-[-50%] bg-purple-500 rounded-[5px]"></span>
-              <span className="font-medium text-4xl text-[#333]">6</span>
+              <span className="font-medium text-4xl text-[#333]">
+                {tasks.length}
+              </span>
             </p>
           </section>
           <section className="text-gray-400">
             <p>In Progress:</p>
             <p className="pl-4 relative flex gap-2">
               <span className="absolute h-[70%] w-[0.2rem] left-[1px] top-1/2 translate-y-[-50%] bg-[#3AAFAE] rounded-[5px]"></span>
-              <span className="font-medium text-4xl text-[#333]">4</span>
+              <span className="font-medium text-4xl text-[#333]">
+                {activeTasks.length}
+              </span>
             </p>
           </section>
           <section className="text-gray-400">
             <p>Open Tasks:</p>
             <p className="pl-4 relative flex gap-2">
               <span className="absolute h-[70%] w-[0.2rem] left-[1px] top-1/2 translate-y-[-50%] bg-orange-400 rounded-[5px]"></span>
-              <span className="font-medium text-4xl text-[#333]">3</span>
+              <span className="font-medium text-4xl text-[#333]">
+                {activeTasks.length}
+              </span>
             </p>
           </section>
           <section className="text-gray-400">
             <p>Completed:</p>
             <p className="pl-4 relative flex gap-2">
               <span className="absolute h-[70%] w-[0.2rem] left-[1px] top-1/2 translate-y-[-50%] bg-green-400 rounded-[5px]"></span>
-              <span className="font-medium text-4xl text-[#333]">2</span>
+              <span className="font-medium text-4xl text-[#333]">
+                {completedTasks.length}
+              </span>
             </p>
           </section>
         </div>

@@ -1,10 +1,13 @@
+"use client";
+
+import { useTasks } from "@/lib/context/taskContext";
 import { IconCheck } from "@/lib/icons/IconCheck";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 
-export async function Header() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+export function Header() {
+  const { user } = useKindeBrowserClient();
+  const { openModalForAdd } = useTasks();
 
   return (
     <header className="px-6 my-4 w-full flex items-center justify-between bg-[#f9f9f9]">
@@ -14,7 +17,7 @@ export async function Header() {
             👋
           </span>
           {user
-            ? `welcome ${user.given_name} to FirstTask`
+            ? `welcome ${user?.given_name} to FirstTask`
             : "Welcome to FirstTask"}
         </h1>
         <p>
@@ -28,8 +31,11 @@ export async function Header() {
           )}
         </p>
       </section>
-      <div className="h-[50px] flex items-center gap-[10.4rem]">
-        <button className="px-8 py-3 bg-[#3aafae] text-white rounded-[50px] hover:bg-[#00A1F1] hover:text-white transition-all duration-200 ease-in-out">
+      <section className="h-[50px] flex items-center gap-[10.4rem]">
+        <button
+          onClick={openModalForAdd}
+          className="px-8 py-3 bg-[#3aafae] text-white rounded-[50px] hover:bg-[#00A1F1] hover:text-white transition-all duration-200 ease-in-out"
+        >
           Create a new task
         </button>
 
@@ -62,7 +68,7 @@ export async function Header() {
             <IconCheck />
           </Link>
         </nav>
-      </div>
+      </section>
     </header>
   );
 }

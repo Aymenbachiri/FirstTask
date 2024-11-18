@@ -1,10 +1,11 @@
 "use client";
 
+import { useTasks } from "@/lib/context/taskContext";
 import { useState } from "react";
 
 export function Filters() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [priority, setPriority] = useState("all");
+  const { setPriority } = useTasks();
 
   const priorities = ["All", "Low", "Medium", "High"];
   return (

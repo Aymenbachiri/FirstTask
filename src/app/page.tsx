@@ -1,5 +1,12 @@
+"use client";
+
 import { Filters } from "@/components/Filters";
 import { TaskItem } from "@/components/TaskItem";
+import { useTasks } from "@/lib/context/taskContext";
+import { filteredTasks } from "@/lib/utils/utils";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { container, item } from "@/lib/utils/animations";
 
 export default function Home() {
   const tasks = [
@@ -60,6 +67,13 @@ export default function Home() {
     },
   ];
 
+  const { openModalForAdd, setPriority, priority } = useTasks();
+  const filtered = filteredTasks(tasks, priority);
+
+  useEffect(() => {
+    setPriority("all");
+  }, []);
+
   return (
     <main className="m-6 h-full">
       <div className="flex justify-between">
@@ -67,17 +81,25 @@ export default function Home() {
         <Filters />
       </div>
 
-      <div className="pb-[2rem] mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem]">
-        {tasks.map((task, index) => (
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className="pb-[2rem] mt-6 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[1.5rem]"
+      >
+        {filtered.map((task, index) => (
           <TaskItem key={index} task={task} />
         ))}
-        <button
+        <motion.button
+          variants={item}
           className="h-[16rem] w-full py-2 rounded-md text-lg font-medium text-gray-500 border-dashed border-2 border-gray-400
           hover:bg-gray-300 hover:border-none transition duration-200 ease-in-out"
+          onClick={openModalForAdd}
         >
           Add New Task
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </main>
   );
 }
